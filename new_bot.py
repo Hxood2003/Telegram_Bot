@@ -1,21 +1,13 @@
 from telegram import Update, Bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-import sqlite3
-from datetime import datetime, date
-from typing import List, Tuple
-import os
 
 # 🔑 التوكن الخاص بالبوت
-TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', 'REPLACE_WITH_TOKEN')
+TOKEN = '7998479930:AAFcADgQdzsBf7PAUm0o5GLfXYpQje5XIaU'
 
 # 👑 معرفات الإدمن (ID الأرقام)
 ADMINS = [5459308678, 7908967919, 1801986367]
 
-# =========================
-# 💬 وظائف الرسائل الأساسية
-# =========================
 # 🟢 أمر /start
-
 def start(update: Update, context: CallbackContext):
     update.message.reply_text(
         "👋 أهلاً بك في بوت التواصل مع الإدارة.\n"
@@ -23,7 +15,6 @@ def start(update: Update, context: CallbackContext):
     )
 
 # ✉️ استقبال رسائل الأعضاء وإرسالها للإدمنز
-
 def handle_user_message(update: Update, context: CallbackContext):
     user = update.message.from_user
     user_id = user.id
@@ -85,7 +76,7 @@ def handle_user_message(update: Update, context: CallbackContext):
 
             # إضافة رسالة للرد على العضو
             if sent_message:
-                sent_message.reply_text(f"🔁 للرد على العضو اضغط رد على هذه الرسالة.\n🆔 ID: {user_id}")
+                sent_message.reply_text(f"�� للرد على العضو اضغط رد على هذه الرسالة.\n🆔 ID: {user_id}")
 
         except Exception as e:
             print(f"❌ خطأ عند إرسال الرسالة للإدمن {admin_id}: {e}")
@@ -94,7 +85,6 @@ def handle_user_message(update: Update, context: CallbackContext):
     update.message.reply_text("✅ تم إرسال رسالتك للإدارة.\n📬 سيتم الرد عليك بأقرب وقت.")
 
 # 🔁 استقبال رد الإدمن وإرساله للعضو
-
 def handle_admin_reply(update: Update, context: CallbackContext):
     reply_to = update.message.reply_to_message
 
@@ -140,6 +130,10 @@ def handle_admin_reply(update: Update, context: CallbackContext):
 # =========================
 # 💾 إدارة المبيعات والمنتجات (SQLite)
 # =========================
+import sqlite3
+from datetime import datetime, date
+from typing import List, Tuple
+
 DB_PATH = 'sales.db'
 
 def init_db():
@@ -198,7 +192,6 @@ def parse_int(value: str):
         return None
 
 # 🆘 مساعدة
-
 def help_command(update: Update, context: CallbackContext):
     text = (
         "ℹ️ أوامر البوت:\n\n"
@@ -217,7 +210,6 @@ def help_command(update: Update, context: CallbackContext):
     update.message.reply_text(text)
 
 # 🧱 أوامر المنتجات (Admins)
-
 def add_product(update: Update, context: CallbackContext):
     if not is_admin(update):
         update.message.reply_text("❌ هذا الأمر للإدمن فقط.")
@@ -313,7 +305,6 @@ def set_stock(update: Update, context: CallbackContext):
     conn.close()
 
 # 🧾 تسجيل بيع
-
 def _parse_sale_args(tokens: List[str]) -> List[Tuple[int, int]]:
     # يدعم: [id qty] أو [id1:qty1,id2:qty2]
     if len(tokens) == 2 and ":" not in tokens[0] and ":" not in tokens[1]:
@@ -404,7 +395,6 @@ def sale_command(update: Update, context: CallbackContext):
         conn.close()
 
 # 📊 التقارير
-
 def today_sales(update: Update, context: CallbackContext):
     if not is_admin(update):
         update.message.reply_text("❌ هذا الأمر للإدمن فقط.")
@@ -475,7 +465,6 @@ def _report(update: Update, start_date: str, end_date: str):
     update.message.reply_text("\n".join(lines))
 
 # 🚀 تشغيل البوت
-
 def main():
     init_db()
     updater = Updater(TOKEN, use_context=True)
